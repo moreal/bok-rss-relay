@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use domain::BokRssProvider;
 use poem::{
     EndpointExt, Route, Server, endpoint::StaticFilesEndpoint, listener::TcpListener,
@@ -34,7 +36,12 @@ async fn main() -> Result<(), anyhow::Error> {
         .with(Cors::new());
 
     Server::new(TcpListener::bind("0.0.0.0:3000"))
-        .run(app)
+        .run_with_graceful_shutdown(
+            app,
+            async move {
+                let _ = tokio::signal::ctrl_c().await;
+            },
+            Some(Duration::from_secs(5)))
         .await
         .map_err(|x| x.into())
 }
