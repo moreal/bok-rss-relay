@@ -1,0 +1,15 @@
+[package]
+name = "bok-rss-relay"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rss = { version = "2.0", features = ["atom"] }
+reqwest = { version = "0.12", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+regex = "1.11.1"
+once_cell = "1.21.1"
+poem = "3.1.7"
+poem-openapi = { version = "5.1.8", features = ["swagger-ui"] }
+anyhow = "1.0.97"
+async-trait = "0.1.87"
