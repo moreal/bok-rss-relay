@@ -15,6 +15,10 @@ RUN cargo build --release
 
 FROM gcr.io/distroless/cc-debian12 AS runtime
 
-COPY --from=builder /app/target/release/bok-rss-relay /
+WORKDIR /
+EXPOSE 3000
 
-CMD ["/bok-rss-relay"]
+COPY --from=builder /app/target/release/bok-rss-relay /
+COPY ./static /static
+
+ENTRYPOINT ["/bok-rss-relay"]

@@ -1,5 +1,8 @@
 use domain::BokRssProvider;
-use poem::{EndpointExt, Route, Server, listener::TcpListener, middleware::Cors};
+use poem::{
+    EndpointExt, Route, Server, endpoint::StaticFilesEndpoint, listener::TcpListener,
+    middleware::Cors,
+};
 use poem_openapi::OpenApiService;
 use reqwest::Url;
 
@@ -9,7 +12,7 @@ mod domain;
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
     let api_service = OpenApiService::new(
-        api::Api {
+        api::RssApi {
             rss_provider: Box::new(BokRssProvider {
                 endpoint: Url::parse("https://bok.or.kr")?,
             }),
@@ -17,12 +20,16 @@ async fn main() -> Result<(), anyhow::Error> {
         "RSS relayer for Bank of Korea RSS feeds.",
         "1.0",
     )
-    .server("http://localhost:3000/");
+    .server("http://localhost:3000/rss");
 
     let ui = api_service.swagger_ui();
 
     let app = Route::new()
-        .nest("/", api_service)
+        .nest("/rss", api_service)
+        .nest(
+            "/",
+            StaticFilesEndpoint::new("./static").index_file("index.html"),
+        )
         .nest("/docs", ui)
         .with(Cors::new());
 

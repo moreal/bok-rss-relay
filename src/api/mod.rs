@@ -1,3 +1,3 @@
 mod rss;
 
-pub(crate) use rss::Api;
+pub(crate) use rss::RssApi;

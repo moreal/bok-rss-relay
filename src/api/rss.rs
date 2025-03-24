@@ -13,7 +13,7 @@ enum ApiTags {
     Rss,
 }
 
-pub struct Api {
+pub struct RssApi {
     pub rss_provider: Box<dyn RssProvider>,
 }
 
@@ -24,8 +24,8 @@ enum RssResponse {
 }
 
 #[OpenApi]
-impl Api {
-    #[oai(path = "/rss/:id", method = "get", tag = "ApiTags::Rss")]
+impl RssApi {
+    #[oai(path = "/:id", method = "get", tag = "ApiTags::Rss")]
     async fn get_rss(
         &self,
         id: Path<String>,
@@ -94,7 +94,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_rss_success() {
-        let api = Api {
+        let api = RssApi {
             rss_provider: Box::new(MockRssProvider { success: true }),
         };
 
@@ -113,7 +113,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_rss_error() {
-        let api = Api {
+        let api = RssApi {
             rss_provider: Box::new(MockRssProvider { success: false }),
         };
 
@@ -129,7 +129,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_rss_with_escaped_content() {
-        let api = Api {
+        let api = RssApi {
             rss_provider: Box::new(MockRssProvider { success: true }),
         };
 
