@@ -41,7 +41,8 @@ async fn main() -> Result<(), anyhow::Error> {
             async move {
                 let _ = tokio::signal::ctrl_c().await;
             },
-            Some(Duration::from_secs(5)))
+            Some(Duration::from_secs(5)),
+        )
         .await
         .map_err(|x| x.into())
 }
